@@ -32,6 +32,8 @@ OPT = -Og
 BUILD_DIR = build
 OBJ_DIR   = $(BUILD_DIR)/obj
 
+#Executable path
+BIN_DIR   = $(BUILD_DIR)/bin
 ######################################
 # source
 ######################################
@@ -171,10 +173,10 @@ LDSCRIPT = STM32F407XX_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BIN_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).hex $(BIN_DIR)/$(TARGET).bin
 
 
 #######################################
@@ -197,18 +199,30 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(BIN_DIR)/$(TARGET).elf: $(OBJECTS) Makefile | $(BIN_DIR)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(BIN_DIR)/%.hex: $(BIN_DIR)/%.elf | $(BIN_DIR)
 	$(HEX) $< $@
 	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+$(BIN_DIR)/%.bin: $(BIN_DIR)/%.elf | $(BIN_DIR)
+	$(BIN) $< $@
 	
+	
+ifeq ($(OS),Windows_NT)
 $(BUILD_DIR):
-	mkdir $@		
+	-mkdir "$(subst /,\\,$@)"
+
+$(BIN_DIR): | $(BUILD_DIR)
+	-mkdir "$(subst /,\\,$@)"
+else
+$(BUILD_DIR):
+	mkdir $@
+
+$(BIN_DIR): | $(BUILD_DIR)
+	mkdir $@
+endif
 
 #######################################
 # clean up
