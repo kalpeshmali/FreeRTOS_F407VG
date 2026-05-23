@@ -1,0 +1,13 @@
+# Ignore everything inside build/
+build/*
+
+# But keep final executables
+!build/*.elf
+!build/*.bin
+!build/*.hex
+!build/*.map
+
+# Ignore intermediate object files, dependency files, and listings
+build/**/*.o
+build/**/*.d
+build/**/*.lst

@@ -20,3 +20,10 @@ Click OK and restart your terminal
 
 => Open Visual Studio Code -> File -> Open Folder -> Select the Folder where we generated the Code using STM32CubeMX 
                             -> Open Terminal -> make (Run the code)
+
+=> Download the STM32CubeProgrammer -> Installed 
+-> Connect the Board -> Serial Number -> refresh
+                        Port -> SWD
+                        Frequency (KHz)->4000
+                        Mode -> Normal
+-> Click on + (Plus) icon -> Open File -> 
