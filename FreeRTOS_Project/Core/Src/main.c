@@ -312,6 +312,7 @@ void task1_handler(void *parameters)
 {
 	while(1)
 	{
+		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
 		printf("Message from Task1\n");
 		taskYIELD();
 	}
@@ -321,6 +322,7 @@ void task2_handler(void *parameters)
 {
 	while(1)
 	{
+		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
 		printf("Message from Task2\n");
 		taskYIELD();
 	}
