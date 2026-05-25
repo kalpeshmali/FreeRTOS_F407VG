@@ -46,16 +46,18 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+#define DWT_CTRL *(volatile uint32_t*)0xE0001000
 BaseType_t status;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void task1_handler(void *parameters);
 void task2_handler(void *parameters);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -96,6 +98,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  DWT_CTRL |= ( 1<<0 );
+
+  SEGGER_SYSVIEW_Conf();
+  SEGGER_SYSVIEW_Start();
 
  status = xTaskCreate(task1_handler, "Task-1", 200, "Hello Word from Task-1", 2, &task1_handle);
  configASSERT(status == pdPASS);
@@ -312,9 +318,9 @@ void task1_handler(void *parameters)
 {
 	while(1)
 	{
-		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+		//HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
 		printf("Message from Task1\n");
-		taskYIELD();
+		//taskYIELD();
 	}
 }
 
@@ -322,9 +328,9 @@ void task2_handler(void *parameters)
 {
 	while(1)
 	{
-		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+		//HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
 		printf("Message from Task2\n");
-		taskYIELD();
+		//taskYIELD();
 	}
 }
 /* USER CODE END 4 */
